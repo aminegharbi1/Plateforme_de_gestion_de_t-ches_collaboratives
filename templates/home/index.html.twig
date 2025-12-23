@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block body %}
+{% if app.user %}
+    <h1>Bienvenue, {{ app.user.email }} !</h1>
+{% else %}
+    <h1>Bienvenue, invité !</h1>
+{% endif %}
+
+{% if app.user and 'ROLE_ADMIN' in app.user.roles %}
+    <h2>Projets</h2>
+    {% if projects is defined and projects|length > 0 %}
+        <table border="1" cellpadding="5">
+            <tr>
+                <th>Nom du projet</th>
+                <th>Description</th>
+                <th>Date de début</th>
+                <th>Date de fin</th>
+            </tr>
+            {% for project in projects %}
+                <tr>
+                    <td>{{ project.name }}</td>
+                    <td>{{ project.description }}</td>
+                    <td>{{ project.startDate ? project.startDate|date('d/m/Y') : '' }}</td>
+                    <td>{{ project.endDate ? project.endDate|date('d/m/Y') : '' }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>Aucun projet pour le moment.</p>
+    {% endif %}
+{% endif %}
+
+<h2>Mes tâches</h2>
+{% if tasks is defined and tasks|length > 0 %}
+    <table border="1" cellpadding="5">
+        <tr>
+            <th>Titre</th>
+            <th>Description</th>
+            <th>Priorité</th>
+            <th>Status</th>
+            <th>Deadline</th>
+        </tr>
+        {% for task in tasks %}
+            <tr>
+                <td>{{ task.title }}</td>
+                <td>{{ task.description }}</td>
+                <td>{{ task.priority }}</td>
+                <td>{{ task.status }}</td>
+                <td>{{ task.deadline ? task.deadline|date('d/m/Y') : '' }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <p>Aucune tâche assignée pour le moment.</p>
+{% endif %}
+
+{% endblock %}
