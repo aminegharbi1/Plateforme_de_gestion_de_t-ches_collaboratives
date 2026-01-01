@@ -6,7 +6,6 @@ use App\Repository\TaskRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\DBAL\Types\Types;
 
-
 #[ORM\Entity(repositoryClass: TaskRepository::class)]
 class Task
 {
@@ -38,7 +37,6 @@ class Task
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $deadline = null;
 
-
     #[ORM\ManyToOne(inversedBy: 'tasks')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $assignedTo = null;
@@ -47,17 +45,11 @@ class Task
     #[ORM\JoinColumn(nullable: false)]
     private ?Project $project = null;
 
-    // ---------------- Getters & Setters ----------------
+    // ================== GETTERS & SETTERS ==================
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+    public function getId(): ?int { return $this->id; }
 
-    public function getTitle(): ?string
-    {
-        return $this->title;
-    }
+    public function getTitle(): ?string { return $this->title; }
 
     public function setTitle(string $title): static
     {
@@ -65,10 +57,7 @@ class Task
         return $this;
     }
 
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
+    public function getDescription(): ?string { return $this->description; }
 
     public function setDescription(?string $description): static
     {
@@ -76,10 +65,7 @@ class Task
         return $this;
     }
 
-    public function getPriority(): ?string
-    {
-        return $this->priority;
-    }
+    public function getPriority(): ?string { return $this->priority; }
 
     public function setPriority(string $priority): static
     {
@@ -87,10 +73,7 @@ class Task
         return $this;
     }
 
-    public function getStatus(): ?string
-    {
-        return $this->status;
-    }
+    public function getStatus(): ?string { return $this->status; }
 
     public function setStatus(string $status): static
     {
@@ -98,10 +81,7 @@ class Task
         return $this;
     }
 
-    public function getDeadline(): ?\DateTimeInterface
-    {
-        return $this->deadline;
-    }
+    public function getDeadline(): ?\DateTimeInterface { return $this->deadline; }
 
     public function setDeadline(?\DateTimeInterface $deadline): static
     {
@@ -109,10 +89,7 @@ class Task
         return $this;
     }
 
-    public function getAssignedTo(): ?User
-    {
-        return $this->assignedTo;
-    }
+    public function getAssignedTo(): ?User { return $this->assignedTo; }
 
     public function setAssignedTo(User $assignedTo): static
     {
@@ -120,14 +97,18 @@ class Task
         return $this;
     }
 
-    public function getProject(): ?Project
-    {
-        return $this->project;
-    }
+    public function getProject(): ?Project { return $this->project; }
 
     public function setProject(?Project $project): static
     {
         $this->project = $project;
         return $this;
+    }
+
+    // ================== HELPERS ==================
+
+    public function isCompleted(): bool
+    {
+        return $this->status === self::STATUS_DONE;
     }
 }

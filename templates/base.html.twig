@@ -1,179 +1,225 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Task Manager{% endblock %}</title>
-        <link rel="stylesheet" href="">
-         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-..." crossorigin="anonymous">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-        <style>
-            :root{ --sidebar-width:260px; --sidebar-collapsed-width:72px; }
-            body{ font-size:13px; }
-            h1{ font-size:1.4rem; }
-            h2{ font-size:1.2rem; }
-            h3{ font-size:1.05rem; }
+	<head>
+		<meta charset="UTF-8">
+		<title>
+			{% block title %}Task Manager
+			{% endblock %}
+		</title>
+		<link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.2/dist/flatly/bootstrap.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+		<link rel="stylesheet" href="{{ asset('css/app.css') }}"> {% block styles %}{% endblock %}
+		
+		<style>
+			/* ====== SIDEBAR ====== */
+			.sidebar {
+				background-color: #5c27fe;
+				color: white;
+				width: 250px;
+				height: 100%;
+				display: flex;
+				flex-direction: column;
+				transition: width 0.3s ease, left 0.3s ease;
+				overflow: hidden;
+				position: fixed;
+				z-index: 1040;
+			}
 
-            /* Sidebar transition and collapsed (icons-only) state */
-            #sidebar{ 
-                width:var(--sidebar-width); 
-                transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1), 
-                            left 0.35s cubic-bezier(0.4, 0, 0.2, 1); 
-                overflow:hidden;
-                left: 0;
-                top: 0;
-            }
-            body.sidebar-collapsed #sidebar{ 
-                width:var(--sidebar-collapsed-width); 
-            }
-            body.sidebar-collapsed .flex-grow-1{ 
-                margin-left:var(--sidebar-collapsed-width) !important; 
-            }
-            body.sidebar-collapsed #sidebar .link-text{ 
-                display:none; 
-            }
-            body.sidebar-collapsed #sidebar .fs-5{ 
-                font-size:1.25rem !important; 
-            }
+			body.sidebar-collapsed .sidebar {
+				width: 70px;
+			}
+			.sidebar-header {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+				padding: 20px;
+				font-weight: bold;
+			}
+			.brand {
+				white-space: nowrap;
+			}
+			.toggle-btn {
+				cursor: pointer;
+				color: #ffffffcc;
+				font-size: 1.2rem;
+				padding: 10px 20px;
+			}
+			.nav-menu {
+				display: flex;
+				flex-direction: column;
+				gap: 5px;
+				margin-top: 20px;
+				list-style: none;
+				padding-left: 0;
+			}
+			.nav-item {
+				display: flex;
+				align-items: center;
+				gap: 16px;
+				padding: 10px 20px;
+				color: #ffffffcc;
+				text-decoration: none;
+				border-radius: 8px;
+				transition: background 0.2s, color 0.2s;
+			}
+			.nav-item i {
+				font-size: 0.9rem;
+			}
+			.nav-item span {
+				transition: opacity 0.2s;
+			}
+			.nav-item:hover,
+			.nav-item.active {
+				background-color: rgba(255, 255, 255, 0.1);
+				color: #fff;
+			}
+			body.sidebar-collapsed .nav-item span,
+			body.sidebar-collapsed .brand {
+				display: none;
+			}
 
-            /* Mobile behaviour: sidebar off-canvas */
-            #sidebar{ position:fixed; z-index:1040; top:0; bottom:0; }
-            .sidebar-overlay{ display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:1035; }
-            body.sidebar-open .sidebar-overlay{ display:block; }
-            body.sidebar-open #sidebar{ left: 0 !important; }
+			/* overlay mobile */
+			.sidebar-overlay {
+				display: none;
+				position: fixed;
+				inset: 0;
+				background: rgba(0, 0, 0, 0.5);
+				z-index: 1035;
+			}
+			body.sidebar-open .sidebar-overlay {
+				display: block;
+			}
 
-            /* Default: on small screens, hide sidebar off-canvas until opened */
-            @media (max-width: 768px){
-                #sidebar{ left: calc(-1 * var(--sidebar-width)); }
-                .flex-grow-1{ margin-left:0 !important; }
-                body.sidebar-collapsed .flex-grow-1{ margin-left:0 !important; }
-                body.sidebar-collapsed #sidebar { left: calc(-1 * var(--sidebar-width)); }
-            }
+			/* Content */
+			.flex-grow-1 {
+				margin-left: 250px;
+				transition: margin-left 0.3s;
+			}
+			body.sidebar-collapsed .flex-grow-1 {
+				margin-left: 70px;
+			}
+			@media(max-width:768px) {
+				.sidebar {
+					left: -250px;
+				}
+				body.sidebar-open .sidebar {
+					left: 0 !important;
+				}
+				.flex-grow-1 {
+					margin-left: 0 !important;
+				}
+			}
+		</style>
+	</head>
 
-            /* Smaller sidebar link text */
-            #sidebar .nav-link{ 
-                font-size:0.95rem; 
-                transition: all 0.3s ease;
-            }
-            #sidebar .fs-5{ 
-                font-size:1rem; 
-                transition: font-size 0.3s ease;
-            }
+	<body>
+		<div
+			class="d-flex">
+			<!-- Sidebar -->
+			<nav class="sidebar">
+				<div class="sidebar-header">
+					<i class="bi bi-layers-fill fs-4"></i>
+					<span class="brand fs-5">Task Manager</span>
+				</div>
 
-            /* Toggle button */
-            #sidebarToggle{ 
-                position:fixed; 
-                left:1.5rem; 
-                top:1rem; 
-                z-index:1050;
-                padding: 0.5rem 0.75rem;
-            }
-            @media (max-width: 768px){
-                #sidebarToggle{ left:0.5rem; top:0.5rem; }
-            }
+				<div id="sidebarToggle" class="toggle-btn">
+					<i class="bi bi-list fs-4"></i>
+				</div>
 
-            /* Content wrapper transition */
-            .flex-grow-1 { 
-                margin-left: 260px;
-                transition: margin-left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            }
+				<div id="sidebarOverlay" class="sidebar-overlay"></div>
 
-        </style>
-    </head>
-    <body>
-        <div class="d-flex">
-            <nav id="sidebar" class="bg-dark text-white vh-100 position-fixed">
-                <div class="p-3">
-                    <a class="d-flex align-items-center mb-3 text-white text-decoration-none" href="{{ path('home') }}">
-                        <i class="bi bi-kanban-fill fs-4 me-2"></i>
-                        <span class="fs-5">Task Manager</span>
-                    </a>
+				<ul class="nav-menu">
+					{% if app.user %}
+						<li>
+							<a href="{{ path('home') }}" class="nav-item {% if app.request.attributes.get('_route') == 'home' %}active{% endif %}">
+								<i class="bi bi-house-fill"></i>
+								<span>Home</span>
+							</a>
+						</li>
 
-                    <ul class="nav nav-pills flex-column mb-auto">
-                        {% if app.user %}
-                            <li class="nav-item mb-1">
-                                <a class="nav-link d-flex align-items-center text-white {% if app.request.attributes.get('_route') == 'dashboard' %}active bg-secondary{% endif %}" href="{{ path('dashboard') }}">
-                                    <i class="bi bi-speedometer2 fs-5"></i>
-                                    <span class="link-text ms-2">Dashboard</span>
-                                </a>
-                            </li>
-                            <li class="nav-item mb-1">
-                                <a class="nav-link d-flex align-items-center text-white {% if app.request.attributes.get('_route') == 'project_index' %}active bg-secondary{% endif %}" href="{{ path('project_index') }}">
-                                    <i class="bi bi-folder2-open fs-5"></i>
-                                    <span class="link-text ms-2">Projects</span>
-                                </a>
-                            </li>
-                            <li class="nav-item mb-1">
-                                <a class="nav-link d-flex align-items-center text-white {% if app.request.attributes.get('_route') == 'app_task_index' %}active bg-secondary{% endif %}" href="{{ path('app_task_index') }}">
-                                    <i class="bi bi-list-task fs-5"></i>
-                                    <span class="link-text ms-2">My Tasks</span>
-                                </a>
-                            </li>
-                            <li class="nav-item mt-2">
-                                <a class="nav-link d-flex align-items-center text-white" href="{{ path('connection') }}">
-                                    <i class="bi bi-box-arrow-in-right fs-5"></i>
-                                    <span class="link-text ms-2">Connection</span>
-                                </a>
-                            </li>
-                        {% endif %}
-                    </ul>
+						<li>
+							<a href="{{ path('dashboard') }}" class="nav-item {% if app.request.attributes.get('_route') == 'dashboard' %}active{% endif %}">
+								<i class="bi bi-speedometer2"></i>
+								<span>Dashboard</span>
+							</a>
+						</li>
 
-                    <hr class="text-secondary">
 
-                    {% if app.user %}
-                        <div class="dropdown">
-                            <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                <img src="https://via.placeholder.com/32" alt="" class="rounded-circle me-2">
-                                <strong>{{ app.user.email }}</strong>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-                                <li><a class="dropdown-item" href="{{ path('app_logout') }}">Logout</a></li>
-                            </ul>
-                        </div>
-                    {% else %}
-                        <a class="btn btn-outline-light mt-2" href="{{ path('app_login') }}">Login</a>
-                    {% endif %}
-                </div>
-            </nav>
+						<li>
+							<a href="{{ path('project_index') }}" class="nav-item {% if app.request.attributes.get('_route') == 'project_index' %}active{% endif %}">
+								<i class="bi bi-folder2-open"></i>
+								<span>Projects</span>
+							</a>
+						</li>
 
-            <div class="flex-grow-1">
-                <button id="sidebarToggle" class="btn btn-sm btn-dark d-flex align-items-center" title="Toggle sidebar">
-                    <i class="bi bi-list"></i>
-                </button>
-                <div id="sidebarOverlay" class="sidebar-overlay"></div>
-                <main class="p-4">
-                    {% block body %}{% endblock %}
-                </main>
-            </div>
-        </div>
-        <script>
-            (function(){
-                const body = document.body;
-                const toggle = document.getElementById('sidebarToggle');
-                const overlay = document.getElementById('sidebarOverlay');
+						<li>
+							<a href="{{ path('app_task_index') }}" class="nav-item {% if app.request.attributes.get('_route') == 'app_task_index' %}active{% endif %}">
+								<i class="bi bi-list-task"></i>
+								<span>Tasks</span>
+							</a>
+						</li>
 
-                // Restore collapsed state on desktop
-                try{
-                    if(localStorage.getItem('sidebar-collapsed') === 'true'){
-                        body.classList.add('sidebar-collapsed');
-                    }
-                }catch(e){ /* ignore */ }
+						<li>
+							<a href="{{ path('app_logout') }}" class="nav-item">
+								<i class="bi bi-box-arrow-in-right"></i>
+								<span>Logout</span>
+							</a>
+						</li>
+					{% else %}
+						<li>
+							<a href="{{ path('app_login') }}" class="nav-item">
+								<i class="bi bi-person-circle"></i>
+								<span>Login</span>
+							</a>
+						</li>
+					{% endif %}
+				</ul>
+			</nav>
 
-                toggle && toggle.addEventListener('click', function(e){
-                    e.preventDefault();
-                    if(window.innerWidth <= 768){
-                        body.classList.toggle('sidebar-open');
-                    }else{
-                        body.classList.toggle('sidebar-collapsed');
-                        try{ localStorage.setItem('sidebar-collapsed', body.classList.contains('sidebar-collapsed')); }catch(e){}
-                    }
-                });
+			<!-- Content -->
+			<div class="flex-grow-1">
+				<main class="p-4 page-fade"> {% block body %}{% endblock %}
+					</main>
+				</div>
+			</div>
 
-                overlay && overlay.addEventListener('click', function(){ body.classList.remove('sidebar-open'); });
+			<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-                // Close sidebar when escape pressed (mobile)
-                document.addEventListener('keydown', function(e){ if(e.key === 'Escape'){ body.classList.remove('sidebar-open'); }});
-            })();
-        </script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-..." crossorigin="anonymous"></script>
-    </body>
-</html>
+			<script>
+				(function () {
+const body = document.body;
+const toggle = document.getElementById('sidebarToggle');
+const overlay = document.getElementById('sidebarOverlay');
+
+toggle && toggle.addEventListener('click', function () {
+if (window.innerWidth <= 768) {
+body.classList.toggle('sidebar-open');
+} else {
+body.classList.toggle('sidebar-collapsed');
+try {
+localStorage.setItem('sidebar-collapsed', body.classList.contains('sidebar-collapsed'));
+} catch (e) {}
+}
+});
+
+overlay && overlay.addEventListener('click', function () {
+body.classList.remove('sidebar-open');
+});
+
+document.addEventListener('keydown', function (e) {
+if (e.key === 'Escape') {
+body.classList.remove('sidebar-open');
+}
+});
+
+try {
+if (localStorage.getItem('sidebar-collapsed') === 'true') {
+body.classList.add('sidebar-collapsed');
+}
+} catch (e) {}
+})();
+			</script>
+
+			{% block javascripts %}{% endblock %}
+		</body>
+	</html>

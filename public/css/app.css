@@ -1,0 +1,202 @@
+/* General page background */
+body {
+    background-color: #f4f6f9;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Card styling */
+.animated-form {
+    max-width: 600px;
+    margin: 60px auto;
+    border-radius: 12px;
+    background-color: #ffffff;
+    animation: fadeIn 0.6s ease-in-out;
+}
+
+/* Card body padding */
+.card-body {
+    padding: 2rem;
+}
+
+/* Form labels */
+label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: block;
+    color: #333;
+}
+
+/* Inputs, selects, textarea */
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid #dcdcdc;
+    font-size: 14px;
+    margin-bottom: 15px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+/* Focus effect */
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: #0d6efd;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+}
+
+/* Buttons */
+button.btn-primary {
+    padding: 10px 24px;
+    font-weight: 600;
+    border-radius: 8px;
+}
+
+a.btn-outline-secondary {
+    padding: 10px 24px;
+    border-radius: 8px;
+}
+
+/* Smooth animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+/* =========================
+   DASHBOARD GLOBAL
+========================= */
+
+.dashboard-container {
+    max-width: 1200px;
+    margin: auto;
+}
+
+/* Titles */
+.dashboard-title {
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+}
+
+.section-title {
+    font-weight: 600;
+    margin: 2.5rem 0 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Welcome box */
+.welcome-box {
+    background: linear-gradient(135deg, #0d6efd, #3b82f6);
+    color: #fff;
+    padding: 1.8rem;
+    border-radius: 14px;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 25px rgba(13,110,253,0.25);
+}
+
+/* Tables */
+.table-custom {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #fff;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+    font-size: 0.9rem;
+}
+
+.table-custom th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    padding: 14px;
+    color: #495057;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.table-custom td {
+    padding: 14px;
+    border-bottom: 1px solid #f1f3f5;
+    color: #333;
+}
+
+.table-custom tr:last-child td {
+    border-bottom: none;
+}
+
+.table-custom tr:hover {
+    background-color: #f8f9fc;
+}
+
+/* Status badges */
+.badge-status {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-done {
+    background-color: #d1e7dd;
+    color: #0f5132;
+}
+
+.status-pending {
+    background-color: #fff3cd;
+    color: #664d03;
+}
+
+.status-late {
+    background-color: #f8d7da;
+    color: #842029;
+}
+
+/* Empty state */
+.empty-state {
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border-radius: 12px;
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* Priority */
+.priority-high {
+    color: #dc3545;
+    font-weight: 600;
+}
+
+.priority-medium {
+    color: #fd7e14;
+    font-weight: 600;
+}
+
+.priority-low {
+    color: #198754;
+    font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .table-custom {
+        font-size: 0.85rem;
+    }
+
+    .welcome-box {
+        padding: 1.4rem;
+    }
+}

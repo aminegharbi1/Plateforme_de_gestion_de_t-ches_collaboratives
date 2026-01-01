@@ -28,4 +28,8 @@ security:
                 path: /
 
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
+        # Admin routes
+        - { path: ^/project/new, roles: ROLE_ADMIN }
+        # Dashboard and project list accessible by logged-in users
+        - { path: ^/dashboard, roles: ROLE_USER }
+        - { path: ^/project/list, roles: ROLE_USER }

@@ -1,151 +1,237 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Dashboard - Task Manager{% endblock %}
+{% block title %}Dashboard
+{% endblock %}
 
 {% block body %}
-<div class="container-fluid py-4">
-    <div class="row mb-4">
-        <div class="col-md-8">
-            <h1 class="h2">Dashboard</h1>
-            <p class="text-muted">Welcome to your admin dashboard</p>
-        </div>
-        <div class="col-md-4 text-end">
-            <a href="{{ path('app_task_new') }}" class="btn btn-primary">
-                <i class="bi bi-plus-circle"></i> New Task
-            </a>
-        </div>
-    </div>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+	<link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
 
-    <!-- Stats Row -->
-    <div class="row mb-4">
-        <div class="col-md-3">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <p class="text-muted mb-0">Total Tasks</p>
-                            <h3 class="mb-0">{{ totalTasks }}</h3>
-                        </div>
-                        <div class="text-primary" style="font-size: 2rem;">
-                            <i class="bi bi-check-circle"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <p class="text-muted mb-0">Completed</p>
-                            <h3 class="mb-0">{{ completedTasks }}</h3>
-                        </div>
-                        <div class="text-success" style="font-size: 2rem;">
-                            <i class="bi bi-check2-all"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <p class="text-muted mb-0">Total Projects</p>
-                            <h3 class="mb-0">{{ projects|length }}</h3>
-                        </div>
-                        <div class="text-info" style="font-size: 2rem;">
-                            <i class="bi bi-folder"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <p class="text-muted mb-0">Pending</p>
-                            <h3 class="mb-0">{{ totalTasks - completedTasks }}</h3>
-                        </div>
-                        <div class="text-warning" style="font-size: 2rem;">
-                            <i class="bi bi-hourglass-split"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+	<style>
+		.stat-card {
+			border-radius: 1rem;
+			min-height: 130px;
+		}
+		.stat-icon {
+			background: #fff;
+			border-radius: 50%;
+			padding: 12px;
+			font-size: 1.8rem;
+		}
+		.progress {
+			height: 6px;
+			border-radius: 10px;
+		}
+		.avatar {
+			width: 32px;
+			height: 32px;
+			border-radius: 50%;
+			border: 2px solid #fff;
+			margin-left: -8px;
+		}
+	</style>
 
-    <!-- Recent Projects -->
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-white border-bottom">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h5 class="card-title mb-0">Recent Projects</h5>
-                        <a href="{{ path('project_index') }}" class="btn btn-sm btn-outline-primary">View All</a>
-                    </div>
-                </div>
-                <div class="card-body">
-                    {% if projects|length > 0 %}
-                        <div class="table-responsive">
-                            <table class="table table-hover mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Project Name</th>
-                                        <th>Description</th>
-                                        <th>Start Date</th>
-                                        <th>Status</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for project in projects|slice(0, 5) %}
-                                        <tr>
-                                            <td>
-                                                <strong>{{ project.name }}</strong>
-                                            </td>
-                                            <td>
-                                                {% if project.description %}
-                                                    {{ project.description|slice(0, 50) }}{% if project.description|length > 50 %}...{% endif %}
-                                                {% else %}
-                                                    <span class="text-muted">No description</span>
-                                                {% endif %}
-                                            </td>
-                                            <td>
-                                                {% if project.startDate %}
-                                                    {{ project.startDate|date('M d, Y') }}
-                                                {% endif %}
-                                            </td>
-                                            <td>
-                                                {% if project.endDate and project.endDate < 'now'|date %}
-                                                    <span class="badge bg-danger">Completed</span>
-                                                {% else %}
-                                                    <span class="badge bg-success">Active</span>
-                                                {% endif %}
-                                            </td>
-                                            <td>
-                                                <a href="{{ path('project_show', {id: project.id}) }}" class="btn btn-sm btn-outline-primary">View</a>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    {% else %}
-                        <div class="alert alert-info mb-0">
-                            <i class="bi bi-info-circle"></i> No projects yet. <a href="{{ path('project_index') }}">Create one</a>
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+	<div
+		class="container-fluid py-4">
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+		<!-- HEADER -->
+		<div class="d-flex justify-content-between align-items-center mb-4">
+			<div>
+				<h2 class="fw-bold">Dashboard</h2>
+				<p class="text-muted mb-0">Welcome back 👋</p>
+			</div>
+				<a href="{{ path('app_task_new') }}" class="btn btn-primary">
+					<i class="bi bi-plus-circle"></i>
+					New Task
+				</a>
+
+		</div>
+
+		<!-- STATS -->
+		<div class="row g-4 mb-4">
+
+			<div class="col-md-3">
+				<div class="stat-card p-4 shadow-sm" style="background:#e8f8ee;">
+					<div class="d-flex justify-content-between">
+						<div>
+							<p class="text-muted mb-1">Total Projects</p>
+							<h2 class="fw-bold">{{ projects|length }}</h2>
+						</div>
+						<div class="stat-icon text-success">
+							<i class="bi bi-briefcase"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-3">
+				<div class="stat-card p-4 shadow-sm" style="background:#e8f4ff;">
+					<div class="d-flex justify-content-between">
+						<div>
+							<p class="text-muted mb-1">Tasks</p>
+							<h2 class="fw-bold">{{ totalTasks }}</h2>
+							<small class="text-primary">{{ completedTasks }}
+								Completed</small>
+						</div>
+						<div class="stat-icon text-primary">
+							<i class="bi bi-list-check"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-3">
+				<div class="stat-card p-4 shadow-sm" style="background:#eafaf1;">
+					<div class="d-flex justify-content-between">
+						<div>
+							<p class="text-muted mb-1">Users</p>
+							<h2 class="fw-bold">{{ usersCount ?? 0 }}</h2>
+						</div>
+						<div class="stat-icon text-danger">
+							<i class="bi bi-people"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-3">
+				<div class="stat-card p-4 shadow-sm" style="background:#fff6e5;">
+					<div class="d-flex justify-content-between">
+						<div>
+							<p class="text-muted mb-1">Productivity</p>
+							<h2 class="fw-bold">76%</h2>
+						</div>
+						<div class="stat-icon text-warning">
+							<i class="bi bi-activity"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<!-- CONTENT -->
+		<div
+			class="row g-4">
+
+			<!-- PROJECTS -->
+			<div class="col-lg-8">
+				<div class="card shadow-sm border-0">
+					<div class="card-body">
+						<h5 class="fw-bold mb-4">Active Projects</h5>
+
+						<div class="table-responsive">
+							<table class="table align-middle">
+								<thead class="text-muted">
+									<tr>
+										<th>Name</th>
+										<th>Progress</th>
+										<th>Status</th>
+										<th>Assigned to</th>
+									</tr>
+								</thead>
+								<tbody>
+
+									{% for project in projects %}
+
+										{# ===== LOGIQUE COULEUR DYNAMIQUE ===== #}
+										{% set progress = project.progress ?? 50 %}
+
+										{% if project.endDate and project.endDate < 'now'|date %}
+											{% set barColor = 'bg-danger' %}
+											{% set badgeColor = 'bg-danger' %}
+											{% set statusLabel = 'Completed' %}
+										{% elseif progress < 40 %}
+											{% set barColor = 'bg-warning' %}
+											{% set badgeColor = 'bg-warning text-dark' %}
+											{% set statusLabel = 'At Risk' %}
+										{% elseif progress < 70 %}
+											{% set barColor = 'bg-info' %}
+											{% set badgeColor = 'bg-info' %}
+											{% set statusLabel = 'On Track' %}
+										{% else %}
+											{% set barColor = 'bg-success' %}
+											{% set badgeColor = 'bg-success' %}
+											{% set statusLabel = 'Excellent' %}
+										{% endif %}
+
+										<tr>
+											<!-- NAME -->
+											<td>
+												<strong>{{ project.name }}</strong><br>
+												<small class="text-muted">
+													{{ project.startDate ? project.startDate|date('M d, Y') : '' }}
+												</small>
+											</td>
+
+											<!-- PROGRESS -->
+											<td style="width:180px">
+												<small class="fw-bold">{{ progress }}%</small>
+												<div class="progress">
+													<div class="progress-bar {{ barColor }}" style="width: {{ progress }}%"></div>
+												</div>
+											</td>
+
+											<!-- STATUS -->
+											<td>
+												<span class="badge {{ badgeColor }}">
+													{{ statusLabel }}
+												</span>
+											</td>
+
+											<!-- ASSIGNED -->
+											<td>
+												<div class="d-flex">
+													<img src="https://i.pravatar.cc/40?u={{ project.id }}" class="avatar">
+												</div>
+											</td>
+
+											<!-- ACTION -->
+											<td>
+												<i class="bi bi-three-dots-vertical text-muted"></i>
+											</td>
+										</tr>
+
+									{% endfor %}
+
+
+								</tbody>
+							</table>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+			<!-- TASK PROGRESS -->
+			<div class="col-lg-4">
+				<div class="card shadow-sm border-0 h-100">
+					<div class="card-body">
+						<h5 class="fw-bold mb-3">Task Progress</h5>
+
+						{% set progress = totalTasks > 0 ? (completedTasks / totalTasks * 100)|round : 0 %}
+
+						<h1 class="fw-bold mb-3">{{ progress }}%</h1>
+
+						<div class="progress mb-4">
+							<div class="progress-bar bg-success" style="width:{{ progress }}%"></div>
+						</div>
+
+						<div class="row text-center">
+							<div class="col">
+								<h4 class="fw-bold">{{ completedTasks }}</h4>
+								<small class="text-muted">Completed</small>
+							</div>
+							<div class="col">
+								<h4 class="fw-bold">{{ totalTasks - completedTasks }}</h4>
+								<small class="text-muted">Remaining</small>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
 {% endblock %}

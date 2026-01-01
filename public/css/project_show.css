@@ -1,0 +1,12 @@
+/* Styles specific to project show page */
+@import url('/css/base.css');
+
+h1.h2{ margin-bottom:0.25rem; }
+.card-header{ background:transparent; border-bottom:1px solid rgba(0,0,0,0.04); }
+
+.table thead th{ border-bottom:2px solid rgba(0,0,0,0.04); }
+
+.btn-outline-warning{ border-radius:8px; }
+
+/* Task badges */
+.badge{ padding:.45em .6em; border-radius:6px; }

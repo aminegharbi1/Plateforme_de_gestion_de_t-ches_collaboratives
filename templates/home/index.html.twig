@@ -3,58 +3,101 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block body %}
-{% if app.user %}
-    <h1>Bienvenue, {{ app.user.email }} !</h1>
-{% else %}
-    <h1>Bienvenue, invité !</h1>
-{% endif %}
+<div class="dashboard-container">
 
-{% if app.user and 'ROLE_ADMIN' in app.user.roles %}
-    <h2>Projets</h2>
-    {% if projects is defined and projects|length > 0 %}
-        <table border="1" cellpadding="5">
-            <tr>
-                <th>Nom du projet</th>
-                <th>Description</th>
-                <th>Date de début</th>
-                <th>Date de fin</th>
-            </tr>
-            {% for project in projects %}
+    {# Message de bienvenue #}
+    <div class="welcome-box">
+        <h1 class="dashboard-title">
+            {% if app.user %}
+                Bienvenue, {{ app.user.email }} !
+            {% else %}
+                Bienvenue, invité !
+            {% endif %}
+        </h1>
+    </div>
+
+    {# ================= PROJETS (ADMIN) ================= #}
+    {% if app.user and 'ROLE_ADMIN' in app.user.roles %}
+        <h2 class="section-title">
+            <i class="bi bi-folder2-open"></i> Projets
+        </h2>
+
+        {% if projects is defined and projects|length > 0 %}
+            <table class="table-custom">
+                <thead>
+                    <tr>
+                        <th>Nom du projet</th>
+                        <th>Description</th>
+                        <th>Date de début</th>
+                        <th>Date de fin</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for project in projects %}
+                        <tr>
+                            <td><strong>{{ project.name }}</strong></td>
+                            <td>{{ project.description }}</td>
+                            <td>{{ project.startDate ? project.startDate|date('d/m/Y') : '-' }}</td>
+                            <td>{{ project.endDate ? project.endDate|date('d/m/Y') : '-' }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="empty-state">Aucun projet pour le moment.</p>
+        {% endif %}
+    {% endif %}
+
+    {# ================= TÂCHES ================= #}
+    <h2 class="section-title">
+        <i class="bi bi-list-task"></i> Mes tâches
+    </h2>
+
+    {% if tasks is defined and tasks|length > 0 %}
+        <table class="table-custom">
+            <thead>
                 <tr>
-                    <td>{{ project.name }}</td>
-                    <td>{{ project.description }}</td>
-                    <td>{{ project.startDate ? project.startDate|date('d/m/Y') : '' }}</td>
-                    <td>{{ project.endDate ? project.endDate|date('d/m/Y') : '' }}</td>
+                    <th>Titre</th>
+                    <th>Description</th>
+                    <th>Priorité</th>
+                    <th>Status</th>
+                    <th>Deadline</th>
                 </tr>
-            {% endfor %}
+            </thead>
+            <tbody>
+                {% for task in tasks %}
+                    <tr>
+                        <td><strong>{{ task.title }}</strong></td>
+                        <td>{{ task.description }}</td>
+
+                        <td>
+                            {% if task.priority == 'High' %}
+                                <span class="priority-high">Haute</span>
+                            {% elseif task.priority == 'Medium' %}
+                                <span class="priority-medium">Moyenne</span>
+                            {% else %}
+                                <span class="priority-low">Basse</span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if task.status == 'Done' %}
+                                <span class="badge-status status-done">Terminée</span>
+                            {% elseif task.status == 'Pending' %}
+                                <span class="badge-status status-pending">En cours</span>
+                            {% else %}
+                                <span class="badge-status status-late">En retard</span>
+                            {% endif %}
+                        </td>
+
+                        <td>{{ task.deadline ? task.deadline|date('d/m/Y') : '-' }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
         </table>
     {% else %}
-        <p>Aucun projet pour le moment.</p>
+        <p class="empty-state">Aucune tâche assignée pour le moment.</p>
     {% endif %}
-{% endif %}
 
-<h2>Mes tâches</h2>
-{% if tasks is defined and tasks|length > 0 %}
-    <table border="1" cellpadding="5">
-        <tr>
-            <th>Titre</th>
-            <th>Description</th>
-            <th>Priorité</th>
-            <th>Status</th>
-            <th>Deadline</th>
-        </tr>
-        {% for task in tasks %}
-            <tr>
-                <td>{{ task.title }}</td>
-                <td>{{ task.description }}</td>
-                <td>{{ task.priority }}</td>
-                <td>{{ task.status }}</td>
-                <td>{{ task.deadline ? task.deadline|date('d/m/Y') : '' }}</td>
-            </tr>
-        {% endfor %}
-    </table>
-{% else %}
-    <p>Aucune tâche assignée pour le moment.</p>
-{% endif %}
-
+</div>
 {% endblock %}

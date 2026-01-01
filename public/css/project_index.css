@@ -1,0 +1,13 @@
+/* Styles specific to project index */
+@import url('/css/base.css');
+
+.card{ transition: transform .18s ease, box-shadow .18s ease; }
+.card:hover{ transform: translateY(-6px); box-shadow:0 12px 30px rgba(33,37,41,0.08); }
+
+.progress{ height:10px; border-radius:8px; overflow:hidden; }
+.progress .progress-bar{ transition: width .6s ease; }
+
+.card-footer .btn{ border-radius:8px; }
+
+/* Make badges slightly more prominent */
+.badge{ font-weight:600; }

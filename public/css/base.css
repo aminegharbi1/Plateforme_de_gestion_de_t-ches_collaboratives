@@ -1,0 +1,37 @@
+/* Base visual overrides for the app (Bootswatch theme augmentations) */
+:root{
+    --main-bg: #f6f8fa;
+    --muted: #6c757d;
+}
+body{
+    background: var(--main-bg);
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+}
+
+/* Cards and spacing */
+.card{
+    border-radius:12px;
+    box-shadow:0 6px 18px rgba(33,37,41,0.06);
+}
+
+/* Buttons */
+.btn-primary{
+    border-radius:10px;
+    padding:0.5rem 0.9rem;
+}
+
+/* Helper */
+.container-fluid, .container{ padding-left:1.25rem; padding-right:1.25rem; }
+
+/* Form inputs */
+.form-control{ border-radius:8px; }
+
+/* Sidebar tweaks */
+#sidebar{ background: linear-gradient(180deg,#212529, #1b1f23); }
+#sidebar .nav-link.active{ background:rgba(255,255,255,0.06) !important; }
+
+/* Small responsive helper */
+@media (max-width:768px){
+    .card{ border-radius:8px; }
+}

@@ -1,0 +1,51 @@
+/* ================= DASHBOARD ================= */
+
+.stat-card {
+    border-radius: 1rem;
+    min-height: 130px;
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0,0,0,.08);
+}
+
+.stat-icon {
+    background: #fff;
+    border-radius: 50%;
+    padding: 12px;
+    font-size: 1.8rem;
+}
+
+.progress {
+    height: 6px;
+    border-radius: 10px;
+    background-color: #e9ecef;
+}
+
+.progress-bar {
+    border-radius: 10px;
+    transition: width .6s ease;
+}
+
+.avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    margin-left: -8px;
+    object-fit: cover;
+}
+
+/* Badges style (photo-like) */
+.badge {
+    border-radius: 1rem;
+    padding: .45em .8em;
+    font-weight: 500;
+}
+
+/* Table */
+.table td, .table th {
+    vertical-align: middle;
+}

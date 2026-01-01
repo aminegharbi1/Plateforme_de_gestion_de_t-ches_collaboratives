@@ -1,0 +1,6 @@
+/* Connection page styles */
+@import url('/css/base.css');
+
+.card{ max-width:560px; margin:0 auto; border-radius:12px; }
+
+.btn{ border-radius:8px; }

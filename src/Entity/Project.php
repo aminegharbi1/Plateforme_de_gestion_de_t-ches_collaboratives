@@ -8,7 +8,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\DBAL\Types\Types;
 
-
 #[ORM\Entity(repositoryClass: ProjectRepository::class)]
 class Project
 {
@@ -29,7 +28,6 @@ class Project
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $endDate = null;
 
-
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $owner = null;
@@ -42,17 +40,11 @@ class Project
         $this->tasks = new ArrayCollection();
     }
 
-    // ---------------- Getters & Setters ----------------
+    // ================== GETTERS & SETTERS ==================
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+    public function getId(): ?int { return $this->id; }
 
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
+    public function getName(): ?string { return $this->name; }
 
     public function setName(string $name): static
     {
@@ -60,10 +52,7 @@ class Project
         return $this;
     }
 
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
+    public function getDescription(): ?string { return $this->description; }
 
     public function setDescription(?string $description): static
     {
@@ -71,10 +60,7 @@ class Project
         return $this;
     }
 
-    public function getStartDate(): ?\DateTimeInterface
-    {
-        return $this->startDate;
-    }
+    public function getStartDate(): ?\DateTimeInterface { return $this->startDate; }
 
     public function setStartDate(\DateTimeInterface $startDate): static
     {
@@ -82,10 +68,7 @@ class Project
         return $this;
     }
 
-    public function getEndDate(): ?\DateTimeInterface
-    {
-        return $this->endDate;
-    }
+    public function getEndDate(): ?\DateTimeInterface { return $this->endDate; }
 
     public function setEndDate(?\DateTimeInterface $endDate): static
     {
@@ -93,10 +76,7 @@ class Project
         return $this;
     }
 
-    public function getOwner(): ?User
-    {
-        return $this->owner;
-    }
+    public function getOwner(): ?User { return $this->owner; }
 
     public function setOwner(User $owner): static
     {
@@ -129,5 +109,38 @@ class Project
             }
         }
         return $this;
+    }
+
+    // ================== DASHBOARD HELPERS ==================
+
+    public function getProgress(): int
+    {
+        $total = $this->tasks->count();
+
+        if ($total === 0) {
+            return 0;
+        }
+
+        $completed = 0;
+        foreach ($this->tasks as $task) {
+            if ($task->isCompleted()) {
+                $completed++;
+            }
+        }
+
+        return (int) round(($completed / $total) * 100);
+    }
+
+    public function getStatus(): string
+    {
+        if ($this->endDate && $this->endDate < new \DateTime()) {
+            return 'Completed';
+        }
+
+        if ($this->getProgress() < 40) {
+            return 'At Risk';
+        }
+
+        return 'On Track';
     }
 }
