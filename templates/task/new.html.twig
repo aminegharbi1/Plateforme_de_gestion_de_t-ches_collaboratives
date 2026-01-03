@@ -2,10 +2,30 @@
 
 {% block title %}New Task{% endblock %}
 
+{% block styles %}
+    {# Optionnel : si tu veux un CSS spécifique aux formulaires de task #}
+        <link rel="stylesheet" href="{{ asset('css/project_form.css') }}">
+
+{% endblock %}
+
 {% block body %}
-    <h1>Create new Task</h1>
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    {# Titre : création ou édition selon variable is_edit #}
+                    <h3 class="mb-3">
+                        {{ is_edit is defined and is_edit ? 'Edit Task' : 'Create Task' }}
+                    </h3>
+                    
+                    {# Formulaire de tâche inclus #}
+                    {{ include('task/_form.html.twig') }}
 
-    {{ include('task/_form.html.twig') }}
+                </div>
+            </div>
 
-   
+        </div>
+    </div>
+</div>
 {% endblock %}

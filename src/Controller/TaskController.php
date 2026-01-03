@@ -15,7 +15,6 @@ use Symfony\Component\Routing\Attribute\Route;
 final class TaskController extends AbstractController
 {
     #[Route('', name: 'app_task_index', methods: ['GET'])]
-    #[Route('', name: 'task_index', methods: ['GET'])]
     public function index(TaskRepository $taskRepository): Response
     {
         return $this->render('task/index.html.twig', [

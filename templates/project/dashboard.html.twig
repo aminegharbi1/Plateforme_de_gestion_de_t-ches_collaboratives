@@ -25,61 +25,6 @@
 	</style>
 
 	<div
-		class="container-fluid d-flex align-items-center">
-
-		<!-- RIGHT: ICONS + USER -->
-		<div
-			class="d-flex align-items-center gap-4 ms-auto">
-			<!-- SHORTCUT -->
-			<button class="btn btn-light rounded-circle">
-				<i class="bi bi-grid"></i>
-			</button>
-
-			<!-- NOTIFICATIONS -->
-			<div class="position-relative">
-				<button class="btn btn-light rounded-circle">
-					<i class="bi bi-bell"></i>
-				</button>
-				<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-					2
-				</span>
-			</div>
-
-			<!-- USER ICON (click opens modal directly) -->
-			<a href="#" onclick="openProfileModal()" class="d-flex align-items-center text-decoration-none">
-				<i class="bi bi-person-circle fs-3"></i>
-			</a>
-
-			<!-- PROFILE MODAL -->
-			<div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
-				<div class="modal-dialog modal-dialog-centered">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="profileModalLabel">User Profile</h5>
-							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-						</div>
-						<div class="modal-body text-center">
-							<i class="bi bi-person-circle fs-1 mb-3"></i>
-							<p class="text-muted">{{ app.user.email }}</p>
-							<p>Additional info about the user can go here.</p>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<script>
-				function openProfileModal() {
-const modal = new bootstrap.Modal(document.getElementById('profileModal'));
-modal.show();
-}
-			</script>
-		</div>
-	</div>
-
-	<div
 		class="container-fluid py-4">
 
 		<!-- DASHBOARD HEADER -->

@@ -91,11 +91,12 @@ class Task
 
     public function getAssignedTo(): ?User { return $this->assignedTo; }
 
-    public function setAssignedTo(User $assignedTo): static
-    {
-        $this->assignedTo = $assignedTo;
-        return $this;
-    }
+   public function setAssignedTo(?User $assignedTo): static
+{
+    $this->assignedTo = $assignedTo;
+    return $this;
+}
+
 
     public function getProject(): ?Project { return $this->project; }
 

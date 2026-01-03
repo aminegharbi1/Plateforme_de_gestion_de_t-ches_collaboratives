@@ -1,99 +1,110 @@
 {# templates/project/show.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Project Details - {{ project.name }}{% endblock %}
+{% block title %}Project Details -
+	{{ project.name }}
+{% endblock %}
 
 {% block body %}
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <div class="card shadow-sm">
-                <div class="card-header bg-primary text-white">
-                    <h3 class="mb-0">{{ project.name }}</h3>
-                </div>
-                <div class="card-body">
-                    {# Project Description #}
-                    {% if project.description %}
-                        <p class="lead">{{ project.description }}</p>
-                    {% else %}
-                        <p class="text-muted"><em>No description available.</em></p>
-                    {% endif %}
+	<div class="container py-5">
+		<div class="row justify-content-center">
+			<div class="col-lg-8">
+				<div class="card shadow-sm">
+					<div class="card-header bg-primary text-white">
+						<h3 class="mb-0">{{ project.name }}</h3>
+					</div>
+					<div
+						class="card-body">
+						{# Project Description #}
+						{% if project.description %}
+							<p class="lead">{{ project.description }}</p>
+						{% else %}
+							<p class="text-muted">
+								<em>No description available.</em>
+							</p>
+						{% endif %}
 
-                    <hr>
+						<hr>
 
-                    {# Project Details #}
-                    <div class="row mb-2">
-                        <div class="col-md-6">
-                            <strong>Start Date:</strong>
-                            {{ project.startDate ? project.startDate|date('M d, Y') : '-' }}
-                        </div>
-                        <div class="col-md-6">
-                            <strong>End Date:</strong>
-                            {{ project.endDate ? project.endDate|date('M d, Y') : '-' }}
-                        </div>
-                    </div>
+						{# Project Details #}
+						<div class="row mb-2">
+							<div class="col-md-6">
+								<strong>Start Date:</strong>
+								{{ project.startDate ? project.startDate|date('M d, Y') : '-' }}
+							</div>
+							<div class="col-md-6">
+								<strong>End Date:</strong>
+								{{ project.endDate ? project.endDate|date('M d, Y') : '-' }}
+							</div>
+						</div>
 
-                    <div class="row mb-2">
-                        <div class="col-md-6">
-                            <strong>Tasks Count:</strong> {{ project.tasks|length }}
-                        </div>
-                        <div class="col-md-6">
-                            <strong>Assigned Users:</strong>
-                            {% if assignedUsers|length > 0 %}
-                                {{ assignedUsers|map(u => u.email)|join(', ') }}
-                            {% else %}
-                                <span class="text-muted">No users assigned</span>
-                            {% endif %}
-                        </div>
-                    </div>
+						<div class="row mb-2">
+							<div class="col-md-6">
+								<strong>Tasks Count:</strong>
+								{{ project.tasks|length }}
+							</div>
+							<div class="col-md-6">
+								<strong>Assigned Users:</strong>
+								{% if project.assignedTo|length > 0 %}
+									{% for user in project.assignedTo %}
+										{{ user.email }}
+										{% if not loop.last %},
+										{% endif %}
+									{% endfor %}
+								{% else %}
+									<span class="text-muted">No users assigned</span>
+								{% endif %}
+							</div>
 
-                    <div class="row mb-2">
-                        <div class="col-md-6">
-                            <strong>Status:</strong>
-                            {% if project.status %}
-                                <span class="badge 
-                                    {% if project.status == 'active' %}bg-success
-                                    {% elseif project.status == 'completed' %}bg-secondary
-                                    {% else %}bg-warning{% endif %}">
-                                    {{ project.status|capitalize }}
-                                </span>
-                            {% else %}
-                                <span class="text-muted">-</span>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
+						</div>
 
-                <div class="card-footer text-end">
-                    <a href="{{ path('project_index') }}" class="btn btn-outline-primary">
-                        Back to Projects
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+						<div class="row mb-2">
+							<div class="col-md-6">
+								<strong>Status:</strong>
+								{% if project.status %}
+									<span class="badge
+											                                    {% if project.status == 'active' %}bg-success
+											                                    {% elseif project.status == 'completed' %}bg-secondary
+											                                    {% else %}bg-warning{% endif %}">
+										{{ project.status|capitalize }}
+									</span>
+								{% else %}
+									<span class="text-muted">-</span>
+								{% endif %}
+							</div>
+						</div>
+					</div>
+
+					<div class="card-footer text-end">
+						<a href="{{ path('project_index') }}" class="btn btn-outline-primary">
+							Back to Projects
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 {% endblock %}
 
 {% block styles %}
-<style>
-    body {
-        background-color: #f8f9fa;
-    }
-    .card {
-        border-radius: 1rem;
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    }
-    .card-header {
-        border-top-left-radius: 1rem;
-        border-top-right-radius: 1rem;
-    }
-    .badge {
-        font-size: 0.9rem;
-    }
-</style>
+	<style>
+		body {
+			background-color: #f8f9fa;
+		}
+		.card {
+			border-radius: 1rem;
+			transition: transform 0.2s, box-shadow 0.2s;
+		}
+		.card:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+		}
+		.card-header {
+			border-top-left-radius: 1rem;
+			border-top-right-radius: 1rem;
+		}
+		.badge {
+			font-size: 0.9rem;
+		}
+	</style>
 {% endblock %}

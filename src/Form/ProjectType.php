@@ -15,21 +15,32 @@ class ProjectType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name')
-            ->add('description')
+            ->add('name', null, [
+                'label' => 'Project Name',
+            ])
+            ->add('description', null, [
+                'label' => 'Description',
+                'required' => false,
+            ])
             ->add('startDate', DateType::class, [
                 'widget' => 'single_text',
                 'required' => false,
+                'label' => 'Start Date',
             ])
             ->add('endDate', DateType::class, [
                 'widget' => 'single_text',
                 'required' => false,
+                'label' => 'End Date',
             ])
-            ->add('owner', EntityType::class, [
+            ->add('assignedTo', EntityType::class, [
                 'class' => User::class,
                 'choice_label' => 'email',
+                'placeholder' => 'Sélectionnez des membres',
                 'required' => true,
+                'multiple' => true,   // permet de choisir plusieurs utilisateurs
+                'expanded' => false,  // select multiple au lieu de checkbox
             ])
+
         ;
     }
 

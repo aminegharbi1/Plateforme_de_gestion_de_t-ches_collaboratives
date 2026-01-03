@@ -23,7 +23,6 @@
     </div>
 
     {# ================= PROJETS (ADMIN) ================= #}
-    {% if app.user and 'ROLE_ADMIN' in app.user.roles %}
         <h2 class="section-title">
             <i class="bi bi-folder2-open"></i> Projets
         </h2>
@@ -52,7 +51,6 @@
         {% else %}
             <p class="empty-state">Aucun projet pour le moment.</p>
         {% endif %}
-    {% endif %}
 
     {# ================= TÂCHES ================= #}
     <h2 class="section-title">

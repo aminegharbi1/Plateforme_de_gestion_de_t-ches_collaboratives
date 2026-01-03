@@ -7,6 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\DBAL\Types\Types;
+use App\Entity\User;
+use App\Entity\Task;
 
 #[ORM\Entity(repositoryClass: ProjectRepository::class)]
 class Project
@@ -30,14 +32,19 @@ class Project
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $owner = null;
+    private User $owner;
 
     #[ORM\OneToMany(mappedBy: 'project', targetEntity: Task::class, cascade: ['persist', 'remove'])]
     private Collection $tasks;
 
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'projects')]
+    #[ORM\JoinTable(name: 'project_members')]
+    private Collection $assignedTo;
+
     public function __construct()
     {
         $this->tasks = new ArrayCollection();
+        $this->assignedTo = new ArrayCollection();
     }
 
     // ================== GETTERS & SETTERS ==================
@@ -76,21 +83,19 @@ class Project
         return $this;
     }
 
-    public function getOwner(): ?User { return $this->owner; }
+    public function getOwner(): User { return $this->owner; }
 
     public function setOwner(User $owner): static
     {
         $this->owner = $owner;
+        $this->addAssignedTo($owner); // Propriétaire est toujours membre
         return $this;
     }
 
     /**
      * @return Collection<int, Task>
      */
-    public function getTasks(): Collection
-    {
-        return $this->tasks;
-    }
+    public function getTasks(): Collection { return $this->tasks; }
 
     public function addTask(Task $task): static
     {
@@ -111,21 +116,35 @@ class Project
         return $this;
     }
 
+    /**
+     * @return Collection<int, User>
+     */
+    public function getAssignedTo(): Collection { return $this->assignedTo; }
+
+    public function addAssignedTo(User $user): static
+    {
+        if (!$this->assignedTo->contains($user)) {
+            $this->assignedTo->add($user);
+        }
+        return $this;
+    }
+
+    public function removeAssignedTo(User $user): static
+    {
+        $this->assignedTo->removeElement($user);
+        return $this;
+    }
+
     // ================== DASHBOARD HELPERS ==================
 
     public function getProgress(): int
     {
         $total = $this->tasks->count();
-
-        if ($total === 0) {
-            return 0;
-        }
+        if ($total === 0) return 0;
 
         $completed = 0;
         foreach ($this->tasks as $task) {
-            if ($task->isCompleted()) {
-                $completed++;
-            }
+            if ($task->isCompleted()) $completed++;
         }
 
         return (int) round(($completed / $total) * 100);
@@ -133,14 +152,8 @@ class Project
 
     public function getStatus(): string
     {
-        if ($this->endDate && $this->endDate < new \DateTime()) {
-            return 'Completed';
-        }
-
-        if ($this->getProgress() < 40) {
-            return 'At Risk';
-        }
-
+        if ($this->endDate && $this->endDate < new \DateTime()) return 'Completed';
+        if ($this->getProgress() < 40) return 'At Risk';
         return 'On Track';
     }
 }
